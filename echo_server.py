@@ -2,23 +2,15 @@
 
 
 
-from tornado.wsgi import WSGIContainer
-from tornado.httpserver import HTTPServer
-from tornado.ioloop import IOLoop
-import tornado.websocket as ws
 
-
-import eventlet
 from flask import Flask, render_template
 from flask_ask import Ask, statement, question
 from geopy.geocoders import GoogleV3
-from flask_socketio import SocketIO, send, emit
+
 
 
 """ Setting Global Vars """
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app,async_mode='eventlet')
 
 
 ask = Ask(app, '/')
@@ -41,7 +33,7 @@ def new_connection():
 
 @app.route("/")
 def initialize():
-    return render_template('index.html',async_mode='eventlet')
+    return render_template('index.html')
 
 ### TRAVEL FUNCTIONS ###
 
@@ -61,7 +53,7 @@ def travel_to_location(location):
     print(loc_obj.longitude)
 
     # start websocket
-    send()
+
     text = render_template('viewLocation', latitute=int(loc_obj.latitude), longitude=int(loc_obj.longitude), location=location)
 
     return question(text)
@@ -94,29 +86,6 @@ def quit_map():
 
 
 
-### SOCKET POST FUNCTION ###
-
-@socketio.on('join', namespace='/sock')
-def join(message):
-
-    print("We are connected!")
-    print(message)
-
-
-
-
-### WEBSOCKET CLASSES ###
-class EchoWebSocket(ws.WebSocketHandler):
-    def open(self):
-        print("WebSocket opened")
-
-    def on_message(self, message):
-        self.write_message(u"You said: " + message)
-
-    def on_close(self):
-        print("WebSocket closed")
-
-
 
 ### CONFIG FUNCTIONS ###
 
@@ -128,7 +97,4 @@ def hello_world():
 
 
 if __name__ == '__main__':
-    http_server = HTTPServer(WSGIContainer(app))
-    http_server.listen(5000)
-    print("Starting server...")
-    IOLoop.instance().start()
+    app.run(debug=True)

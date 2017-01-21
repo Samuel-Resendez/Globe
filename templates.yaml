@@ -1,1 +1,9 @@
-introduction:
+
+
+
+viewLocation: "Sounds good, going to {{location}}, with coordinates {{latitude}} and, {{longitude}}"
+
+
+zoomIn: "Very well, zooming in on your location"
+
+zoomOut: "Very well, zooming out on your location"

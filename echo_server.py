@@ -32,7 +32,7 @@ def travel_to_location(location):
 
     #do post request
 
-    text = render_template('viewLocation',latitute=int(loc_obj.latitude),longitude=int(loc_obj.longitude), location=location)
+    text = render_template('viewLocation', latitute=int(loc_obj.latitude), longitude=int(loc_obj.longitude), location=location)
 
 
     return question(text)

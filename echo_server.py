@@ -15,8 +15,9 @@ app = Flask(__name__)
 
 ask = Ask(app, '/')
 geo_locator = GoogleV3(api_key="AIzaSyC0q7QFF35WNbYWvr4hdFrlsr6RUCGYLRw")
-data_sets = []
+data_sets = ["Meteor Strikes","Plane Crashes","Drone Strikes","Police Killings"]
 user_id = 0
+
 
 
 ### Initialization Functions ###
@@ -72,10 +73,10 @@ def zoom_in():
             return question(text)
     except Exception as e:
         return question("Sorry, the map was busy, please try again!")
-        
+
 @ask.intent('zoomOutIntent')
 def zoom_out():
-    
+
     url = "https://globe-sb.herokuapp.com/alexaPosition"
     try:
         r = requests.post(url,data={"zoom_delta":3})
@@ -98,7 +99,8 @@ def quit_map():
 def send_data(data_pattern_num): # 1 - 4
     url = "https://globe-sb.herokuapp.com/setDataPattern"
     try:
-        r = requests.post(url,data={'pattern_id':data_pattern_num})
+        index = data_sets.index(data_pattern_num)
+        r = requests.post(url,data={'pattern_id':index})
         if r.status_code == 200:
             return question("Alright, updating data pattern")
     except Exception as e:

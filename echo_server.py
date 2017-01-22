@@ -6,7 +6,7 @@
 from flask import Flask, render_template
 from flask_ask import Ask, statement, question
 from geopy.geocoders import GoogleV3
-
+import requests
 
 
 """ Setting Global Vars """
@@ -27,7 +27,7 @@ def new_connection():
     # r = requests.get(url)
 
 
-    return question("Hello, welcome to Globe, what would you like to see today?")
+    return question("Welcome, setting up your connection to Globe?")
 
 
 
@@ -46,34 +46,44 @@ def travel_to_location(location):
     # location is name of location
 
     print(location)
+    try:
+        loc_obj = geo_locator.geocode(location)
+        url = "https://globe-sb.herokuapp.com/"
+        r = requests.post(url, data= {'longitude': loc_obj.longitude,'latitude':loc_obj.latitude})
+        # start websocket
+        print(r.status_code)
+        if r.status_code == 200:
+            text = render_template('viewLocation',location=location)
 
-    loc_obj = geo_locator.geocode(location)
-
-    print(loc_obj.latitude, end=', ')
-    print(loc_obj.longitude)
-
-    # start websocket
-
-    text = render_template('viewLocation', latitute=int(loc_obj.latitude), longitude=int(loc_obj.longitude), location=location)
-
-    return question(text)
+            return question(text)
+    except Exception as e:
+        return question("Sadly, your request failed. Please try again")
 
 
 @ask.intent('zoomInIntent')
 def zoom_in():
 
     # make post request/update webapp
-
-    text = render_template('zoomIn')
-
-    return question(text)
-
+    url = "https://globe-sb.herokuapp.com/alexaPosition"
+    try:
+        r = requests.post(url, data={"zoom_delta":-3})
+        if r.status_code == 200:
+            text = render_template('zoomIn')
+            return question(text)
+    except Exception as e:
+        return question("Sorry, the map was busy, please try again!")
+        
 @ask.intent('zoomOutIntent')
 def zoom_out():
-
-    text = render_template('zoomOut')
-
-    return question(text)
+    
+    url = "https://globe-sb.herokuapp.com/alexaPosition"
+    try:
+        r = requests.post(url,data={"zoom_delta":3})
+        if r.status_code == 200:
+            text = render_template('zoomOut')
+            return question(text)
+    except Exception as e:
+        return question("Sorry, the map seemed busy, please try again!")
 
 
 @ask.intent('quitIntent')
@@ -84,7 +94,26 @@ def quit_map():
 
 ### DATA PREFERENCE FUNCTIONS ###
 
+@ask.intent('setDataIntent')
+def send_data(data_pattern_num): # 1 - 4
+    url = "https://globe-sb.herokuapp.com/setDataPattern"
+    try:
+        r = requests.post(url,data={'pattern_id':data_pattern_num})
+        if r.status_code == 200:
+            return question("Alright, updating data pattern")
+    except Exception as e:
+        return question("Sorry, map was busy, please try again!")
 
+@ask.intent('setMapIntent')
+def update_map(map_num): # 1-3
+    url = "https://globe-sb.herokuapp.com/setMapStyle"
+    try:
+        r = requests.post(url,data={'map_style':map_num})
+
+        if r.status_code == 200:
+            return question("Sounds good, updating map for you.")
+    except Exception as e:
+        return question("Sorry, couldn't find map, please try again.")
 
 
 ### CONFIG FUNCTIONS ###

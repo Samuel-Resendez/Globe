@@ -1,7 +1,7 @@
 
 
 
-viewLocation: "Sounds good, going to {{location}}, with coordinates {{latitude}} and, {{longitude}}"
+viewLocation: "Sounds good, going to {{location}}"
 
 
 zoomIn: "Very well, zooming in on your location"

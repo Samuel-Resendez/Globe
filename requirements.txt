@@ -2,10 +2,10 @@ aniso8601==1.2.0
 cffi==1.9.1
 click==6.7
 cryptography==1.7.1
-enum-compat==0.0.2
 Flask==0.12
-Flask-Ask==0.8.5
+Flask-Ask==0.8.6
 geopy==1.11.0
+gunicorn==19.6.0
 idna==2.2
 itsdangerous==0.24
 Jinja2==2.9.4
@@ -17,5 +17,4 @@ python-dateutil==2.6.0
 PyYAML==3.12
 requests==2.12.5
 six==1.10.0
-tornado==4.4.2
 Werkzeug==0.11.15

@@ -38,6 +38,14 @@ def initialize():
 ### TRAVEL FUNCTIONS ###
 
 
+@ask.intent('syncIntent')
+def sync_clients():
+    url = "https://globe-sb.herokuapp.com/syncClients"
+    r = requests.get(url)
+    if r.status_code == 200:
+        return question("Clients synced successfully!")
+    else:
+        return question("Couldn't sync clients, please try again.")
 
 
 @ask.intent('goToDestinationIntent')

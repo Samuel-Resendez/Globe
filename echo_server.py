@@ -58,7 +58,7 @@ def travel_to_location(location):
 
             return question(text)
     except Exception as e:
-        return question("Sadly, your request failed. Please try again")
+        return question("Request failed. Please try again")
 
 
 @ask.intent('zoomInIntent')
@@ -84,7 +84,7 @@ def zoom_out():
             text = render_template('zoomOut')
             return question(text)
     except Exception as e:
-        return question("Sorry, the map seemed busy, please try again!")
+        return question("Sorry, the map was busy, please try again!")
 
 
 @ask.intent('quitIntent')

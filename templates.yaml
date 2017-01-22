@@ -1,9 +1,9 @@
 
 
 
-viewLocation: "Sounds good, going to {{location}}"
+viewLocation: "Going to {{location}}"
 
 
-zoomIn: "Very well, zooming in on your location"
+zoomIn: "Zooming in on your location"
 
-zoomOut: "No problem, zooming out on your location"
+zoomOut: "Zooming out on your location"

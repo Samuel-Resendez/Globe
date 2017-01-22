@@ -16,6 +16,7 @@ app = Flask(__name__)
 ask = Ask(app, '/')
 geo_locator = GoogleV3(api_key="AIzaSyC0q7QFF35WNbYWvr4hdFrlsr6RUCGYLRw")
 data_sets = ["meteor strikes","plane crashes","drone strikes","police killings"]
+map_stylings = ["dark","topographic","streets"]
 user_id = 0
 
 ### Initialization Functions ###
@@ -113,10 +114,16 @@ def send_data(data_pattern_num): # 1 - 4
 def update_map(map_num): # 1-3
     url = "https://globe-sb.herokuapp.com/setMapStyle"
     try:
-        r = requests.post(url,data={'map_style':map_num})
-
-        if r.status_code == 200:
-            return question("Updating base map.")
+        for x in range(len(map_stylings)):
+            if SequenceMatcher(None,map_num,map_stylings[x]).ratio() > 0.6:
+                r = requests.post(url,data={'map_style':x})
+                if r.status_code == 200:
+                    return question("Updating stylemap")
+                else:
+                    return question("Server error, try again.")
+                break
+            else:
+                return question("Couldn't locate dataset, please choose another")
     except Exception as e:
         return question("Sorry, couldn't find map, please try again.")
 

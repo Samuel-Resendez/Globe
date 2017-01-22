@@ -6,7 +6,7 @@
 from flask import Flask, render_template
 from flask_ask import Ask, statement, question
 from geopy.geocoders import GoogleV3
-import requests
+import requests, time
 from difflib import SequenceMatcher
 
 """ Setting Global Vars """
@@ -99,14 +99,15 @@ def send_data(data_pattern_num): # 1 - 4
     url = "https://globe-sb.herokuapp.com/setDataPattern"
     try:
         for x in range(len(data_sets)):
-            if SequenceMatcher(None,data_pattern_num,data_sets[x]).ratio() > 0.4:
+            print(SequenceMatcher(None,data_pattern_num,data_sets[x]).ratio())
+            if SequenceMatcher(None,data_pattern_num,data_sets[x]).ratio() > 0.8:
                 r = requests.post(url,data={'pattern_id':x})
                 if r.status_code == 200:
                     return question("Updating data pattern")
                 else:
                     return question("Server error, try again.")
                 break
-
+        return question("Couldn't find dataset, please choose another")
     except Exception as e:
         return question("Sorry, map was busy, please try again!")
 
@@ -115,17 +116,33 @@ def update_map(map_num): # 1-3
     url = "https://globe-sb.herokuapp.com/setMapStyle"
     try:
         for x in range(len(map_stylings)):
-            if SequenceMatcher(None,map_num,map_stylings[x]).ratio() > 0.4:
+            print(SequenceMatcher(None,map_num,map_stylings[x]).ratio())
+            if SequenceMatcher(None,map_num,map_stylings[x]).ratio() > 0.7:
                 r = requests.post(url,data={'map_style':x})
                 if r.status_code == 200:
                     return question("Updating stylemap")
                 else:
                     return question("Server error, try again.")
                 break
-            else:
-                return question("Couldn't locate dataset, please choose another")
+
+        return question("Couldn't locate stylemap, please choose another")
     except Exception as e:
         return question("Sorry, couldn't find map, please try again.")
+
+
+### UTIL FUNCTIONS ###
+
+@ask.intent('stallIntent')
+def stall_Alexa(num_of_sec):
+    try:
+        num_of_sec = int(num_of_sec)
+        if(num_of_sec > 7):
+            num_of_sec = 7
+
+        time.sleep(num_of_sec)
+        return question("Hold Finished")
+    except Exception as e:
+        return question("Hold Finished")
 
 
 if __name__ == '__main__':

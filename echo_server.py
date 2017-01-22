@@ -18,8 +18,6 @@ geo_locator = GoogleV3(api_key="AIzaSyC0q7QFF35WNbYWvr4hdFrlsr6RUCGYLRw")
 data_sets = ["meteor strikes","plane crashes","drone strikes","police killings"]
 user_id = 0
 
-
-
 ### Initialization Functions ###
 
 @ask.launch
@@ -28,7 +26,7 @@ def new_connection():
     # r = requests.get(url)
 
 
-    return question("Welcome, setting up your connection to Globe?")
+    return question("Welcome, setting up your connection to Globe")
 
 
 
@@ -100,10 +98,12 @@ def send_data(data_pattern_num): # 1 - 4
     url = "https://globe-sb.herokuapp.com/setDataPattern"
     try:
         for x in range(len(data_sets)):
-            if SequenceMatcher(None,data_pattern_num,data_sets[x]) > 0.6:
+            if SequenceMatcher(None,data_pattern_num,data_sets[x]).ratio() > 0.6:
                 r = requests.post(url,data={'pattern_id':x})
                 if r.status_code == 200:
-                    return question("Alright, updating data pattern")
+                    return question("Updating data pattern")
+                else:
+                    return question("Server error, try again.")
                 break
 
     except Exception as e:
@@ -116,19 +116,10 @@ def update_map(map_num): # 1-3
         r = requests.post(url,data={'map_style':map_num})
 
         if r.status_code == 200:
-            return question("Sounds good, updating map for you.")
+            return question("Updating base map.")
     except Exception as e:
         return question("Sorry, couldn't find map, please try again.")
 
 
-### CONFIG FUNCTIONS ###
-
-@ask.intent('testAlexaIntent')
-def hello_world():
-
-    return statement("Hello World!")
-
-
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)

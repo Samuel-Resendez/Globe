@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 ask = Ask(app, '/')
 geo_locator = GoogleV3(api_key="AIzaSyC0q7QFF35WNbYWvr4hdFrlsr6RUCGYLRw")
-data_sets = ["Meteor Strikes","Plane Crashes","Drone Strikes","Police Killings"]
+data_sets = ["meteor strikes","plane crashes","drone strikes","police killings"]
 user_id = 0
 
 

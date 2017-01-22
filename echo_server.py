@@ -99,7 +99,7 @@ def send_data(data_pattern_num): # 1 - 4
     url = "https://globe-sb.herokuapp.com/setDataPattern"
     try:
         for x in range(len(data_sets)):
-            if SequenceMatcher(None,data_pattern_num,data_sets[x]).ratio() > 0.6:
+            if SequenceMatcher(None,data_pattern_num,data_sets[x]).ratio() > 0.4:
                 r = requests.post(url,data={'pattern_id':x})
                 if r.status_code == 200:
                     return question("Updating data pattern")
@@ -115,7 +115,7 @@ def update_map(map_num): # 1-3
     url = "https://globe-sb.herokuapp.com/setMapStyle"
     try:
         for x in range(len(map_stylings)):
-            if SequenceMatcher(None,map_num,map_stylings[x]).ratio() > 0.6:
+            if SequenceMatcher(None,map_num,map_stylings[x]).ratio() > 0.4:
                 r = requests.post(url,data={'map_style':x})
                 if r.status_code == 200:
                     return question("Updating stylemap")

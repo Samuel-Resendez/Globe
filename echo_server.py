@@ -7,7 +7,7 @@ from flask import Flask, render_template
 from flask_ask import Ask, statement, question
 from geopy.geocoders import GoogleV3
 import requests
-
+from difflib import SequenceMatcher
 
 """ Setting Global Vars """
 app = Flask(__name__)
@@ -99,10 +99,13 @@ def quit_map():
 def send_data(data_pattern_num): # 1 - 4
     url = "https://globe-sb.herokuapp.com/setDataPattern"
     try:
-        index = data_sets.index(data_pattern_num)
-        r = requests.post(url,data={'pattern_id':index})
-        if r.status_code == 200:
-            return question("Alright, updating data pattern")
+        for x in range(len(data_sets)):
+            if SequenceMatcher(None,data_pattern_num,data_sets[x]) > 0.6:
+                r = requests.post(url,data={'pattern_id':x})
+                if r.status_code == 200:
+                    return question("Alright, updating data pattern")
+                break
+
     except Exception as e:
         return question("Sorry, map was busy, please try again!")
 
